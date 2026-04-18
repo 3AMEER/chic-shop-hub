@@ -77,11 +77,14 @@ export function useStore() {
   return c;
 }
 
-// Update this WhatsApp number to your own (international format, no +)
+// عدّلي رقم الواتساب إلى رقمك (صيغة دولية بدون +)
 export const WHATSAPP_NUMBER = "1234567890";
+export const CURRENCY = "ر.س";
 
 export function buildWhatsAppLink(cart: CartItem[], total: number) {
-  const lines = cart.map((i) => `• ${i.product.name} × ${i.qty} — $${(i.product.price * i.qty).toFixed(0)}`);
-  const msg = `Hello! I'd like to place an order:%0A%0A${lines.join("%0A")}%0A%0A*Total: $${total.toFixed(0)}*`;
+  const lines = cart.map(
+    (i) => `• ${i.product.name} × ${i.qty} — ${(i.product.price * i.qty).toFixed(0)} ${CURRENCY}`
+  );
+  const msg = `مرحباً! أرغب في تأكيد طلبي:%0A%0A${lines.join("%0A")}%0A%0A*الإجمالي: ${total.toFixed(0)} ${CURRENCY}*`;
   return `https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`;
 }
