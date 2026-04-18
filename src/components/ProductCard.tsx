@@ -41,11 +41,11 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           </button>
         </div>
         <div className="p-4 sm:p-5">
-          <p className="text-xs tracking-wider text-muted-foreground">{product.tagline}</p>
-          <div className="mt-1 flex items-baseline justify-between gap-2">
-            <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">{product.name}</h3>
-            <span className="font-display text-lg font-semibold text-accent sm:text-xl whitespace-nowrap">
-              {product.price} <span className="text-xs">{CURRENCY}</span>
+          <p className="text-xs font-medium text-muted-foreground">{product.tagline}</p>
+          <div className="mt-1.5 flex items-baseline justify-between gap-2">
+            <h3 className="text-base font-bold text-foreground sm:text-lg">{product.name}</h3>
+            <span className="text-base font-extrabold text-accent sm:text-lg whitespace-nowrap">
+              {product.price} <span className="text-xs font-medium">{CURRENCY}</span>
             </span>
           </div>
           <button
