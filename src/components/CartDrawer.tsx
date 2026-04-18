@@ -1,6 +1,6 @@
 import { Minus, Plus, X, Trash2 } from "lucide-react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useStore, buildWhatsAppLink } from "@/lib/store";
+import { useStore, buildWhatsAppLink, CURRENCY } from "@/lib/store";
 import { Button } from "@/components/ui/button";
 import WhatsAppIcon from "./WhatsAppIcon";
 
@@ -9,10 +9,10 @@ export function CartDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="flex w-full flex-col gap-0 p-0 sm:max-w-md">
-        <SheetHeader className="border-b px-6 py-5">
-          <SheetTitle className="font-display text-2xl">Your Bag</SheetTitle>
-          <p className="text-sm text-muted-foreground">{cart.length} {cart.length === 1 ? "item" : "items"}</p>
+      <SheetContent side="left" className="flex w-full flex-col gap-0 p-0 sm:max-w-md">
+        <SheetHeader className="border-b px-6 py-5 text-right">
+          <SheetTitle className="font-display text-2xl">سلة المشتريات</SheetTitle>
+          <p className="text-sm text-muted-foreground">{cart.length} {cart.length === 1 ? "منتج" : "منتجات"}</p>
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto px-6 py-4">
@@ -21,8 +21,8 @@ export function CartDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
               <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-secondary">
                 <X className="h-8 w-8 text-muted-foreground" />
               </div>
-              <p className="font-display text-xl">Your bag is empty</p>
-              <p className="mt-1 text-sm text-muted-foreground">Add some treasures to get started.</p>
+              <p className="font-display text-xl">السلة فارغة</p>
+              <p className="mt-1 text-sm text-muted-foreground">أضيفي بعض القطع المميزة لتبدئي.</p>
             </div>
           ) : (
             <ul className="space-y-4">
@@ -32,17 +32,17 @@ export function CartDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                   <div className="flex flex-1 flex-col">
                     <div className="flex items-start justify-between gap-2">
                       <h4 className="font-display text-lg leading-tight">{item.product.name}</h4>
-                      <button onClick={() => removeFromCart(item.product.id)} aria-label="Remove">
+                      <button onClick={() => removeFromCart(item.product.id)} aria-label="حذف">
                         <Trash2 className="h-4 w-4 text-muted-foreground hover:text-destructive transition-smooth" />
                       </button>
                     </div>
-                    <p className="text-sm text-accent font-medium">${item.product.price}</p>
+                    <p className="text-sm text-accent font-medium">{item.product.price} {CURRENCY}</p>
                     <div className="mt-auto flex items-center justify-between">
                       <div className="flex items-center gap-2 rounded-full bg-background px-1 py-1">
                         <button
                           onClick={() => updateQty(item.product.id, item.qty - 1)}
                           className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-secondary transition-smooth"
-                          aria-label="Decrease"
+                          aria-label="إنقاص"
                         >
                           <Minus className="h-3 w-3" />
                         </button>
@@ -50,12 +50,14 @@ export function CartDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
                         <button
                           onClick={() => updateQty(item.product.id, item.qty + 1)}
                           className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-secondary transition-smooth"
-                          aria-label="Increase"
+                          aria-label="زيادة"
                         >
                           <Plus className="h-3 w-3" />
                         </button>
                       </div>
-                      <span className="font-display text-lg font-semibold">${item.product.price * item.qty}</span>
+                      <span className="font-display text-lg font-semibold whitespace-nowrap">
+                        {item.product.price * item.qty} {CURRENCY}
+                      </span>
                     </div>
                   </div>
                 </li>
@@ -67,17 +69,17 @@ export function CartDrawer({ open, onOpenChange }: { open: boolean; onOpenChange
         {cart.length > 0 && (
           <div className="border-t bg-card px-6 py-5 space-y-4">
             <div className="flex items-baseline justify-between">
-              <span className="text-sm text-muted-foreground">Total</span>
-              <span className="font-display text-3xl font-semibold text-accent">${cartTotal.toFixed(0)}</span>
+              <span className="text-sm text-muted-foreground">الإجمالي</span>
+              <span className="font-display text-3xl font-semibold text-accent">{cartTotal.toFixed(0)} {CURRENCY}</span>
             </div>
             <a href={buildWhatsAppLink(cart, cartTotal)} target="_blank" rel="noopener noreferrer" className="block">
               <Button className="w-full gap-2 bg-gradient-primary text-accent-foreground hover:opacity-90 shadow-glow h-12 text-base">
                 <WhatsAppIcon className="h-5 w-5" />
-                Order via WhatsApp
+                إتمام الطلب عبر واتساب
               </Button>
             </a>
             <button onClick={clearCart} className="w-full text-xs text-muted-foreground hover:text-destructive transition-smooth">
-              Clear bag
+              تفريغ السلة
             </button>
           </div>
         )}

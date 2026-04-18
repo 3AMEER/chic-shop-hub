@@ -4,17 +4,17 @@ import { CategoryPage } from "@/components/CategoryPage";
 export const Route = createFileRoute("/bags")({
   head: () => ({
     meta: [
-      { title: "Bags — Maison" },
-      { name: "description", content: "Heritage leather totes, crossbody bags and evening clutches." },
-      { property: "og:title", content: "Bags — Maison" },
-      { property: "og:description", content: "Heritage leather totes, crossbody bags and clutches." },
+      { title: "شنط — ميزون" },
+      { name: "description", content: "شنط جلدية فاخرة بتصاميم عصرية وكلاسيكية." },
+      { property: "og:title", content: "شنط — ميزون" },
+      { property: "og:description", content: "شنط جلدية فاخرة بتصاميم عصرية وكلاسيكية." },
     ],
   }),
   component: () => (
     <CategoryPage
       category="bags"
-      title="Bags"
-      subtitle="Heritage leather, considered shapes — companions for every chapter."
+      title="الشنط"
+      subtitle="جلد فاخر، تصاميم عصرية — شريكتك المثالية لكل مناسبة."
     />
   ),
 });

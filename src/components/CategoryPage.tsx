@@ -15,11 +15,11 @@ export function CategoryPage({
   return (
     <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
       <div className="mb-10 text-center animate-float-up">
-        <p className="text-xs uppercase tracking-[0.3em] text-accent">Collection</p>
-        <h1 className="mt-2 font-display text-4xl font-semibold sm:text-5xl lg:text-6xl">{title}</h1>
+        <p className="text-xs tracking-[0.3em] text-accent">المجموعة</p>
+        <h1 className="mt-2 font-display text-4xl font-bold sm:text-5xl lg:text-6xl">{title}</h1>
         <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">{subtitle}</p>
       </div>
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 xl:grid-cols-4">
         {items.map((p, i) => (
           <ProductCard key={p.id} product={p} index={i} />
         ))}

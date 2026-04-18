@@ -24,9 +24,9 @@ export function Header() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
           <Link to="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-primary shadow-glow">
-              <span className="font-display text-lg font-bold text-accent-foreground">M</span>
+              <span className="font-display text-lg font-bold text-accent-foreground">م</span>
             </div>
-            <span className="font-display text-2xl font-semibold tracking-tight">Maison</span>
+            <span className="font-display text-2xl font-bold tracking-tight">ميزون</span>
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
@@ -50,31 +50,31 @@ export function Header() {
           <div className="flex items-center gap-1">
             <button
               onClick={() => setFavOpen(true)}
-              aria-label="Favorites"
+              aria-label="المفضلة"
               className="relative flex h-10 w-10 items-center justify-center rounded-full transition-smooth hover:bg-secondary"
             >
               <Heart className="h-5 w-5" />
               {favorites.length > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+                <span className="absolute -start-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
                   {favorites.length}
                 </span>
               )}
             </button>
             <button
               onClick={() => setCartOpen(true)}
-              aria-label="Cart"
+              aria-label="السلة"
               className="relative flex h-10 w-10 items-center justify-center rounded-full transition-smooth hover:bg-secondary"
             >
               <ShoppingBag className="h-5 w-5" />
               {cartCount > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
+                <span className="absolute -start-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[10px] font-bold text-accent-foreground">
                   {cartCount}
                 </span>
               )}
             </button>
             <button
               onClick={() => setMenuOpen((v) => !v)}
-              aria-label="Menu"
+              aria-label="القائمة"
               className="flex h-10 w-10 items-center justify-center rounded-full transition-smooth hover:bg-secondary md:hidden"
             >
               {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

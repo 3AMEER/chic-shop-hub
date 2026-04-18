@@ -4,17 +4,17 @@ import { CategoryPage } from "@/components/CategoryPage";
 export const Route = createFileRoute("/accessories")({
   head: () => ({
     meta: [
-      { title: "Accessories — Maison" },
-      { name: "description", content: "Refined jewelry, scarves and watches to elevate every look." },
-      { property: "og:title", content: "Accessories — Maison" },
-      { property: "og:description", content: "Refined jewelry, scarves and watches." },
+      { title: "إكسسوارات — ميزون" },
+      { name: "description", content: "مجوهرات وأطقم فاخرة لإطلالة لا تُنسى." },
+      { property: "og:title", content: "إكسسوارات — ميزون" },
+      { property: "og:description", content: "مجوهرات وأطقم فاخرة لإطلالة لا تُنسى." },
     ],
   }),
   component: () => (
     <CategoryPage
       category="accessories"
-      title="Accessories"
-      subtitle="The finishing touch — refined jewelry, silk scarves and timeless watches."
+      title="الإكسسوارات"
+      subtitle="اللمسة الأخيرة — مجوهرات راقية وقطع تكمل إطلالتك بأناقة."
     />
   ),
 });

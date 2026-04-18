@@ -9,17 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as MakeupRouteImport } from './routes/makeup'
 import { Route as BagsRouteImport } from './routes/bags'
 import { Route as AllRouteImport } from './routes/all'
 import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as IndexRouteImport } from './routes/index'
 
-const MakeupRoute = MakeupRouteImport.update({
-  id: '/makeup',
-  path: '/makeup',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const BagsRoute = BagsRouteImport.update({
   id: '/bags',
   path: '/bags',
@@ -46,14 +40,12 @@ export interface FileRoutesByFullPath {
   '/accessories': typeof AccessoriesRoute
   '/all': typeof AllRoute
   '/bags': typeof BagsRoute
-  '/makeup': typeof MakeupRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/accessories': typeof AccessoriesRoute
   '/all': typeof AllRoute
   '/bags': typeof BagsRoute
-  '/makeup': typeof MakeupRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -61,14 +53,13 @@ export interface FileRoutesById {
   '/accessories': typeof AccessoriesRoute
   '/all': typeof AllRoute
   '/bags': typeof BagsRoute
-  '/makeup': typeof MakeupRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/accessories' | '/all' | '/bags' | '/makeup'
+  fullPaths: '/' | '/accessories' | '/all' | '/bags'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/accessories' | '/all' | '/bags' | '/makeup'
-  id: '__root__' | '/' | '/accessories' | '/all' | '/bags' | '/makeup'
+  to: '/' | '/accessories' | '/all' | '/bags'
+  id: '__root__' | '/' | '/accessories' | '/all' | '/bags'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,18 +67,10 @@ export interface RootRouteChildren {
   AccessoriesRoute: typeof AccessoriesRoute
   AllRoute: typeof AllRoute
   BagsRoute: typeof BagsRoute
-  MakeupRoute: typeof MakeupRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/makeup': {
-      id: '/makeup'
-      path: '/makeup'
-      fullPath: '/makeup'
-      preLoaderRoute: typeof MakeupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/bags': {
       id: '/bags'
       path: '/bags'
@@ -124,8 +107,16 @@ const rootRouteChildren: RootRouteChildren = {
   AccessoriesRoute: AccessoriesRoute,
   AllRoute: AllRoute,
   BagsRoute: BagsRoute,
-  MakeupRoute: MakeupRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

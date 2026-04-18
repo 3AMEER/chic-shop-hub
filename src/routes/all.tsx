@@ -4,17 +4,17 @@ import { CategoryPage } from "@/components/CategoryPage";
 export const Route = createFileRoute("/all")({
   head: () => ({
     meta: [
-      { title: "All Products — Maison" },
-      { name: "description", content: "Browse the entire Maison collection." },
-      { property: "og:title", content: "All Products — Maison" },
-      { property: "og:description", content: "Browse the entire Maison collection." },
+      { title: "كل المنتجات — ميزون" },
+      { name: "description", content: "تصفحي كامل مجموعة ميزون من شنط وإكسسوارات." },
+      { property: "og:title", content: "كل المنتجات — ميزون" },
+      { property: "og:description", content: "تصفحي كامل مجموعة ميزون." },
     ],
   }),
   component: () => (
     <CategoryPage
       category="all"
-      title="The Edit"
-      subtitle="Every piece in the Maison collection — accessories, makeup and bags, together."
+      title="كل المجموعة"
+      subtitle="جميع قطع ميزون في مكان واحد — شنط وإكسسوارات بأرقى التصاميم."
     />
   ),
 });
