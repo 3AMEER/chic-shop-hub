@@ -32,9 +32,9 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ميزون — بوتيك الفخامة المنتقاة" },
+      { title: "متجر ماجيك — تسوّقي بأناقة" },
       { name: "description", content: "اكتشفي أرقى الإكسسوارات والشنط النسائية. اطلبي بسهولة عبر الواتساب." },
-      { property: "og:title", content: "ميزون — بوتيك الفخامة المنتقاة" },
+      { property: "og:title", content: "متجر ماجيك — تسوّقي بأناقة" },
       { property: "og:description", content: "اكتشفي أرقى الإكسسوارات والشنط النسائية." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

@@ -9,26 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as BagsRouteImport } from './routes/bags'
-import { Route as AllRouteImport } from './routes/all'
-import { Route as AccessoriesRouteImport } from './routes/accessories'
 import { Route as IndexRouteImport } from './routes/index'
 
-const BagsRoute = BagsRouteImport.update({
-  id: '/bags',
-  path: '/bags',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AllRoute = AllRouteImport.update({
-  id: '/all',
-  path: '/all',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AccessoriesRoute = AccessoriesRouteImport.update({
-  id: '/accessories',
-  path: '/accessories',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,61 +19,28 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/accessories': typeof AccessoriesRoute
-  '/all': typeof AllRoute
-  '/bags': typeof BagsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/accessories': typeof AccessoriesRoute
-  '/all': typeof AllRoute
-  '/bags': typeof BagsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/accessories': typeof AccessoriesRoute
-  '/all': typeof AllRoute
-  '/bags': typeof BagsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/accessories' | '/all' | '/bags'
+  fullPaths: '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/accessories' | '/all' | '/bags'
-  id: '__root__' | '/' | '/accessories' | '/all' | '/bags'
+  to: '/'
+  id: '__root__' | '/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AccessoriesRoute: typeof AccessoriesRoute
-  AllRoute: typeof AllRoute
-  BagsRoute: typeof BagsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/bags': {
-      id: '/bags'
-      path: '/bags'
-      fullPath: '/bags'
-      preLoaderRoute: typeof BagsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/all': {
-      id: '/all'
-      path: '/all'
-      fullPath: '/all'
-      preLoaderRoute: typeof AllRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/accessories': {
-      id: '/accessories'
-      path: '/accessories'
-      fullPath: '/accessories'
-      preLoaderRoute: typeof AccessoriesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -104,9 +53,6 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AccessoriesRoute: AccessoriesRoute,
-  AllRoute: AllRoute,
-  BagsRoute: BagsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
