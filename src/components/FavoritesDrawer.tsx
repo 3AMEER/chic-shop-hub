@@ -1,11 +1,14 @@
 import { Heart, ShoppingBag, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useStore, CURRENCY } from "@/lib/store";
-import { PRODUCTS } from "@/lib/products";
+import { fetchProducts, type Product } from "@/lib/products";
 
 export function FavoritesDrawer({ open, onOpenChange }: { open: boolean; onOpenChange: (o: boolean) => void }) {
   const { favorites, toggleFav, addToCart } = useStore();
-  const items = PRODUCTS.filter((p) => favorites.includes(p.id));
+  const [all, setAll] = useState<Product[]>([]);
+  useEffect(() => { fetchProducts().then(setAll); }, []);
+  const items = all.filter((p) => favorites.includes(p.id));
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
