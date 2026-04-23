@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Sparkles, Search, ArrowDownUp } from "lucide-react";
-import { useMemo, useState } from "react";
+import { ArrowLeft, Sparkles, Search, ArrowDownUp, Loader2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
-import { PRODUCTS, CATEGORIES, type Category } from "@/lib/products";
+import { CATEGORIES, fetchProducts, type Category, type Product } from "@/lib/products";
 import hero from "@/assets/hero.jpg";
 
 // خلط ثابت (deterministic) لمنتجات "الكل" حتى لا يتغيّر الترتيب عند كل إعادة عرض
@@ -12,7 +12,6 @@ function interleaveByCategory<T extends { category: string }>(items: T[]): T[] {
     if (!groups.has(it.category)) groups.set(it.category, []);
     groups.get(it.category)!.push(it);
   });
-  // خلط ثابت داخل كل مجموعة باستخدام بذرة بسيطة
   const seeded = (seed: number) => {
     let s = seed;
     return () => {
@@ -28,7 +27,6 @@ function interleaveByCategory<T extends { category: string }>(items: T[]): T[] {
       [arr[i], arr[j]] = [arr[j], arr[i]];
     }
   });
-  // التداخل (interleave) بحيث يتناوب كل صنف مع الآخر
   const result: T[] = [];
   const lists = Array.from(groups.values());
   let added = true;
@@ -44,8 +42,6 @@ function interleaveByCategory<T extends { category: string }>(items: T[]): T[] {
   }
   return result;
 }
-
-const SHUFFLED_ALL = interleaveByCategory(PRODUCTS);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,9 +63,20 @@ function HomePage() {
   const [filter, setFilter] = useState<Filter>("all");
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<"default" | "asc" | "desc">("default");
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchProducts().then((p) => {
+      setProducts(p);
+      setLoading(false);
+    });
+  }, []);
+
+  const shuffledAll = useMemo(() => interleaveByCategory(products), [products]);
 
   const items = useMemo(() => {
-    let list = filter === "all" ? SHUFFLED_ALL : PRODUCTS.filter((p) => p.category === filter);
+    let list = filter === "all" ? shuffledAll : products.filter((p) => p.category === filter);
     if (query.trim()) {
       const q = query.trim();
       list = list.filter((p) => p.name.includes(q) || p.tagline.includes(q));
@@ -77,7 +84,7 @@ function HomePage() {
     if (sort === "asc") list = [...list].sort((a, b) => a.price - b.price);
     if (sort === "desc") list = [...list].sort((a, b) => b.price - a.price);
     return list;
-  }, [filter, query, sort]);
+  }, [filter, query, sort, products, shuffledAll]);
 
   const scrollToProducts = () => {
     document.getElementById("products")?.scrollIntoView({ behavior: "smooth" });
