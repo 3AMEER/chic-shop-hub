@@ -78,7 +78,7 @@ export function useStore() {
 }
 
 // عدّلي رقم الواتساب إلى رقمك (صيغة دولية بدون +)
-export const WHATSAPP_NUMBER = "1234567890";
+export const WHATSAPP_NUMBER = "201109528468";
 export const CURRENCY = "جنيه";
 
 export function buildWhatsAppLink(cart: CartItem[], total: number) {
