@@ -1,9 +1,51 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Sparkles, Search } from "lucide-react";
+import { ArrowLeft, Sparkles, Search, ArrowDownUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { PRODUCTS, CATEGORIES, type Category } from "@/lib/products";
 import hero from "@/assets/hero.jpg";
+
+// خلط ثابت (deterministic) لمنتجات "الكل" حتى لا يتغيّر الترتيب عند كل إعادة عرض
+function interleaveByCategory<T extends { category: string }>(items: T[]): T[] {
+  const groups = new Map<string, T[]>();
+  items.forEach((it) => {
+    if (!groups.has(it.category)) groups.set(it.category, []);
+    groups.get(it.category)!.push(it);
+  });
+  // خلط ثابت داخل كل مجموعة باستخدام بذرة بسيطة
+  const seeded = (seed: number) => {
+    let s = seed;
+    return () => {
+      s = (s * 9301 + 49297) % 233280;
+      return s / 233280;
+    };
+  };
+  let seedCounter = 1;
+  groups.forEach((arr) => {
+    const rand = seeded(seedCounter++);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  });
+  // التداخل (interleave) بحيث يتناوب كل صنف مع الآخر
+  const result: T[] = [];
+  const lists = Array.from(groups.values());
+  let added = true;
+  while (added) {
+    added = false;
+    for (const list of lists) {
+      const next = list.shift();
+      if (next) {
+        result.push(next);
+        added = true;
+      }
+    }
+  }
+  return result;
+}
+
+const SHUFFLED_ALL = interleaveByCategory(PRODUCTS);
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,7 +69,7 @@ function HomePage() {
   const [sort, setSort] = useState<"default" | "asc" | "desc">("default");
 
   const items = useMemo(() => {
-    let list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
+    let list = filter === "all" ? SHUFFLED_ALL : PRODUCTS.filter((p) => p.category === filter);
     if (query.trim()) {
       const q = query.trim();
       list = list.filter((p) => p.name.includes(q) || p.tagline.includes(q));
@@ -120,21 +162,33 @@ function HomePage() {
           </p>
         </div>
 
-        {/* Filter bar */}
-        <div className="sticky top-[72px] z-30 -mx-4 mb-8 border-y border-border/60 bg-background/85 px-4 py-4 backdrop-blur-xl sm:-mx-6 sm:px-6 lg:rounded-2xl lg:border lg:bg-card/80 lg:shadow-soft">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Categories */}
-            <div className="flex flex-wrap items-center gap-2">
+        {/* Elegant filter bar */}
+        <div className="sticky top-[68px] z-30 -mx-4 mb-8 bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 sm:py-4">
+          <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-3 rounded-2xl border border-border/60 bg-card/70 p-2 shadow-soft backdrop-blur-md sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:p-1.5 sm:ps-2">
+            {/* Search */}
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute end-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="ابحثي عن قطعة..."
+                className="h-11 w-full rounded-full bg-transparent px-4 pe-10 text-sm outline-none placeholder:text-muted-foreground/70"
+              />
+            </div>
+
+            {/* Categories segmented */}
+            <div className="flex items-center gap-1 rounded-full bg-secondary/70 p-1">
               {CATEGORIES.map((c) => {
                 const active = filter === c.value;
                 return (
                   <button
                     key={c.value}
                     onClick={() => setFilter(c.value as Filter)}
-                    className={`rounded-full px-4 py-2 text-sm font-semibold transition-smooth ${
+                    className={`flex-1 whitespace-nowrap rounded-full px-3 py-2 text-xs font-semibold transition-smooth sm:px-4 sm:text-sm ${
                       active
-                        ? "bg-primary text-primary-foreground shadow-soft"
-                        : "bg-secondary text-secondary-foreground hover:bg-accent/20"
+                        ? "bg-background text-foreground shadow-soft"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {c.label}
@@ -143,32 +197,22 @@ function HomePage() {
               })}
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-              {/* Search */}
-              <div className="relative flex-1 sm:w-64">
-                <Search className="pointer-events-none absolute end-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="ابحثي..."
-                  className="h-10 w-full rounded-full border border-border bg-background px-4 pe-10 text-sm outline-none transition-smooth focus:border-accent focus:ring-2 focus:ring-accent/20"
-                />
-              </div>
-
-              {/* Sort */}
+            {/* Sort */}
+            <div className="relative">
+              <ArrowDownUp className="pointer-events-none absolute end-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as typeof sort)}
-                className="h-10 rounded-full border border-border bg-background px-4 text-sm font-medium outline-none transition-smooth focus:border-accent focus:ring-2 focus:ring-accent/20"
+                aria-label="ترتيب"
+                className="h-11 w-full appearance-none rounded-full bg-secondary/70 px-4 pe-9 text-xs font-semibold text-foreground outline-none transition-smooth hover:bg-secondary sm:w-auto sm:text-sm"
               >
-                <option value="default">الترتيب: المميزة</option>
-                <option value="asc">السعر: من الأقل</option>
-                <option value="desc">السعر: من الأعلى</option>
+                <option value="default">المميزة</option>
+                <option value="asc">الأقل سعراً</option>
+                <option value="desc">الأعلى سعراً</option>
               </select>
             </div>
           </div>
-          <div className="mt-3 text-xs text-muted-foreground">
+          <div className="mx-auto mt-2 max-w-5xl px-2 text-center text-xs text-muted-foreground sm:text-start">
             {items.length} {items.length === 1 ? "منتج" : "منتجات"}
           </div>
         </div>
