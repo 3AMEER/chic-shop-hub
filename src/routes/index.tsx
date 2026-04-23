@@ -69,7 +69,7 @@ function HomePage() {
   const [sort, setSort] = useState<"default" | "asc" | "desc">("default");
 
   const items = useMemo(() => {
-    let list = filter === "all" ? PRODUCTS : PRODUCTS.filter((p) => p.category === filter);
+    let list = filter === "all" ? SHUFFLED_ALL : PRODUCTS.filter((p) => p.category === filter);
     if (query.trim()) {
       const q = query.trim();
       list = list.filter((p) => p.name.includes(q) || p.tagline.includes(q));
