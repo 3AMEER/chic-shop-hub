@@ -1,9 +1,51 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowLeft, Sparkles, Search } from "lucide-react";
+import { ArrowLeft, Sparkles, Search, ArrowDownUp } from "lucide-react";
 import { useMemo, useState } from "react";
 import { ProductCard } from "@/components/ProductCard";
 import { PRODUCTS, CATEGORIES, type Category } from "@/lib/products";
 import hero from "@/assets/hero.jpg";
+
+// خلط ثابت (deterministic) لمنتجات "الكل" حتى لا يتغيّر الترتيب عند كل إعادة عرض
+function interleaveByCategory<T extends { category: string }>(items: T[]): T[] {
+  const groups = new Map<string, T[]>();
+  items.forEach((it) => {
+    if (!groups.has(it.category)) groups.set(it.category, []);
+    groups.get(it.category)!.push(it);
+  });
+  // خلط ثابت داخل كل مجموعة باستخدام بذرة بسيطة
+  const seeded = (seed: number) => {
+    let s = seed;
+    return () => {
+      s = (s * 9301 + 49297) % 233280;
+      return s / 233280;
+    };
+  };
+  let seedCounter = 1;
+  groups.forEach((arr) => {
+    const rand = seeded(seedCounter++);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  });
+  // التداخل (interleave) بحيث يتناوب كل صنف مع الآخر
+  const result: T[] = [];
+  const lists = Array.from(groups.values());
+  let added = true;
+  while (added) {
+    added = false;
+    for (const list of lists) {
+      const next = list.shift();
+      if (next) {
+        result.push(next);
+        added = true;
+      }
+    }
+  }
+  return result;
+}
+
+const SHUFFLED_ALL = interleaveByCategory(PRODUCTS);
 
 export const Route = createFileRoute("/")({
   head: () => ({
