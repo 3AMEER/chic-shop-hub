@@ -128,7 +128,7 @@ function HomePage() {
 
             <div className="mt-10 flex items-center gap-6 text-xs text-muted-foreground">
               <div>
-                <p className="text-2xl font-extrabold text-foreground">+{PRODUCTS.length}</p>
+                <p className="text-2xl font-extrabold text-foreground">+{products.length}</p>
                 <p className="mt-1">قطعة فاخرة</p>
               </div>
               <div className="h-10 w-px bg-border" />
