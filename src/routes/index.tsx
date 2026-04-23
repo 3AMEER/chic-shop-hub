@@ -163,9 +163,46 @@ function HomePage() {
         </div>
 
         {/* Elegant filter bar */}
-        <div className="sticky top-[68px] z-30 -mx-4 mb-8 bg-background/80 px-4 py-3 backdrop-blur-xl sm:-mx-6 sm:px-6 sm:py-4">
-          <div className="mx-auto flex max-w-5xl flex-col items-stretch gap-3 rounded-2xl border border-border/60 bg-card/70 p-2 shadow-soft backdrop-blur-md sm:flex-row sm:items-center sm:gap-2 sm:rounded-full sm:p-1.5 sm:ps-2">
-            {/* Search */}
+        <div className="sticky top-[68px] z-30 -mx-4 mb-6 bg-background/80 px-4 py-2 backdrop-blur-xl sm:-mx-6 sm:mb-8 sm:px-6 sm:py-4">
+          {/* Mobile: compact single row */}
+          <div className="mx-auto flex max-w-5xl items-center gap-2 sm:hidden">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute end-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="ابحثي..."
+                className="h-9 w-full rounded-full border border-border/60 bg-card/70 px-3 pe-8 text-xs outline-none placeholder:text-muted-foreground/70 backdrop-blur-md"
+              />
+            </div>
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value as Filter)}
+              aria-label="الفئة"
+              className="h-9 appearance-none rounded-full border border-border/60 bg-card/70 px-3 text-xs font-semibold text-foreground outline-none backdrop-blur-md"
+            >
+              {CATEGORIES.map((c) => (
+                <option key={c.value} value={c.value}>{c.label}</option>
+              ))}
+            </select>
+            <div className="relative">
+              <ArrowDownUp className="pointer-events-none absolute end-2 top-1/2 h-3 w-3 -translate-y-1/2 text-muted-foreground" />
+              <select
+                value={sort}
+                onChange={(e) => setSort(e.target.value as typeof sort)}
+                aria-label="ترتيب"
+                className="h-9 appearance-none rounded-full border border-border/60 bg-card/70 ps-3 pe-7 text-xs font-semibold text-foreground outline-none backdrop-blur-md"
+              >
+                <option value="default">المميزة</option>
+                <option value="asc">الأقل</option>
+                <option value="desc">الأعلى</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Desktop: full bar */}
+          <div className="mx-auto hidden max-w-5xl items-center gap-2 rounded-full border border-border/60 bg-card/70 p-1.5 ps-2 shadow-soft backdrop-blur-md sm:flex">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute end-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
@@ -177,7 +214,6 @@ function HomePage() {
               />
             </div>
 
-            {/* Categories segmented */}
             <div className="flex items-center gap-1 rounded-full bg-secondary/70 p-1">
               {CATEGORIES.map((c) => {
                 const active = filter === c.value;
@@ -185,7 +221,7 @@ function HomePage() {
                   <button
                     key={c.value}
                     onClick={() => setFilter(c.value as Filter)}
-                    className={`flex-1 whitespace-nowrap rounded-full px-3 py-2 text-xs font-semibold transition-smooth sm:px-4 sm:text-sm ${
+                    className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition-smooth ${
                       active
                         ? "bg-background text-foreground shadow-soft"
                         : "text-muted-foreground hover:text-foreground"
@@ -197,14 +233,13 @@ function HomePage() {
               })}
             </div>
 
-            {/* Sort */}
             <div className="relative">
               <ArrowDownUp className="pointer-events-none absolute end-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as typeof sort)}
                 aria-label="ترتيب"
-                className="h-11 w-full appearance-none rounded-full bg-secondary/70 px-4 pe-9 text-xs font-semibold text-foreground outline-none transition-smooth hover:bg-secondary sm:w-auto sm:text-sm"
+                className="h-11 appearance-none rounded-full bg-secondary/70 px-4 pe-9 text-sm font-semibold text-foreground outline-none transition-smooth hover:bg-secondary"
               >
                 <option value="default">المميزة</option>
                 <option value="asc">الأقل سعراً</option>
@@ -212,7 +247,8 @@ function HomePage() {
               </select>
             </div>
           </div>
-          <div className="mx-auto mt-2 max-w-5xl px-2 text-center text-xs text-muted-foreground sm:text-start">
+
+          <div className="mx-auto mt-2 max-w-5xl px-2 text-center text-[11px] text-muted-foreground sm:text-start sm:text-xs">
             {items.length} {items.length === 1 ? "منتج" : "منتجات"}
           </div>
         </div>
